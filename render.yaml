@@ -7,7 +7,7 @@ services:
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
-        value: 3.12.7
+        value: 3.11.9
       - key: GREEN_MAX
         value: "55"
       - key: YELLOW_MAX
