@@ -43,8 +43,9 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 @contextmanager
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=30.0, check_same_thread=False)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA busy_timeout = 30000")
     try:
         yield conn
         conn.commit()
@@ -54,6 +55,8 @@ def get_db():
 
 def init_db():
     with get_db() as conn:
+        conn.execute("PRAGMA journal_mode = WAL")
+        conn.execute("PRAGMA synchronous = NORMAL")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS readings (
